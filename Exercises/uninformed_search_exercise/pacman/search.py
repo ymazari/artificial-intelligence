@@ -93,56 +93,43 @@ def depthFirstSearch(problem):
     "*** YOUR CODE HERE ***"
     visited = set()
     nodes_to_visit = util.Stack()
-
-    if problem.isGoalState(problem.getStartState()):
-        return [problem.getStartState()]
-    else:
-        visited.add(problem.getStartState())
-        for neighbor in problem.getSuccessors(problem.getStartState()):
-            item = (neighbor, [neighbor[1]])
-            nodes_to_visit.push(item)
+    initial_node = (problem.getStartState(), [])
+    nodes_to_visit.push(initial_node)
 
     while not nodes_to_visit.isEmpty():
-        node, path = nodes_to_visit.pop()
-        node_name = node[0]
-        if node_name in visited:
-            continue
+        node_name, path = nodes_to_visit.pop()
         if problem.isGoalState(node_name):
             return path
+        if node_name in visited:
+            continue
         visited.add(node_name)
         for neighbor in problem.getSuccessors(node_name):
             neighbor_name = neighbor[0]
             neighbor_action = neighbor[1]
             if neighbor_name not in visited:
-                nodes_to_visit.push((neighbor, path + [neighbor_action]))
+                nodes_to_visit.push((neighbor_name, path + [neighbor_action]))
+
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
     visited = set()
     nodes_to_visit = util.Queue()
-
-    if problem.isGoalState(problem.getStartState()):
-        return [problem.getStartState()]
-    else:
-        visited.add(problem.getStartState())
-        for neighbor in problem.getSuccessors(problem.getStartState()):
-            item = (neighbor, [neighbor[1]])
-            nodes_to_visit.push(item)
+    initial_node = (problem.getStartState(), [])
+    nodes_to_visit.push(initial_node)
 
     while not nodes_to_visit.isEmpty():
-        node, path = nodes_to_visit.pop()
-        node_name = node[0]
-        if node_name in visited:
-            continue
+        node_name, path = nodes_to_visit.pop()
         if problem.isGoalState(node_name):
             return path
+        if node_name in visited:
+            continue
         visited.add(node_name)
         for neighbor in problem.getSuccessors(node_name):
             neighbor_name = neighbor[0]
             neighbor_action = neighbor[1]
             if neighbor_name not in visited:
-                nodes_to_visit.push((neighbor, path + [neighbor_action]))
+                nodes_to_visit.push((neighbor_name, path + [neighbor_action]))
 
 
 def uniformCostSearch(problem):
