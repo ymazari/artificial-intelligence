@@ -20,6 +20,7 @@ Pacman agents (in searchAgents.py).
 import util
 import numpy as np
 from collections import defaultdict
+from pprint import pprint
 
 
 class SearchProblem:
@@ -119,17 +120,17 @@ def breadthFirstSearch(problem):
     nodes_to_visit.push(initial_node)
 
     while not nodes_to_visit.isEmpty():
-        node_name, path = nodes_to_visit.pop()
-        if problem.isGoalState(node_name):
+        node, path = nodes_to_visit.pop()
+        if problem.isGoalState(node):
             return path
-        if node_name in visited:
+        if node in visited:
             continue
-        visited.add(node_name)
-        for neighbor in problem.getSuccessors(node_name):
-            neighbor_name = neighbor[0]
+        visited.add(node)
+        for neighbor in problem.getSuccessors(node):
+            neighbor_node = neighbor[0]
             neighbor_action = neighbor[1]
-            if neighbor_name not in visited:
-                nodes_to_visit.push((neighbor_name, path + [neighbor_action]))
+            if neighbor_node not in visited:
+                nodes_to_visit.push((neighbor_node, path + [neighbor_action]))
 
 
 def uniformCostSearch(problem):
