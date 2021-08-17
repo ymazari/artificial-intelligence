@@ -29,7 +29,6 @@
 import sys
 import inspect
 import heapq, random
-import io
 
 
 class FixedRandom:
@@ -244,12 +243,12 @@ class Counter(dict):
     all keys are defaulted to have value 0.  Using a dictionary:
 
     a = {}
-    print a['test']
+    print(a['test'])
 
     would give an error, while the Counter class analogue:
 
     >>> a = Counter()
-    >>> print a['test']
+    >>> print(a['test'])
     0
 
     returns the default 0 value. Note that to reference a key
@@ -258,14 +257,14 @@ class Counter(dict):
 
     >>> a = Counter()
     >>> a['test'] = 2
-    >>> print a['test']
+    >>> print(a['test'])
     2
 
     This is very useful for counting things without initializing their counts,
     see for example:
 
     >>> a['blah'] += 1
-    >>> print a['blah']
+    >>> print(a['blah'])
     1
 
     The counter also includes additional functionality useful in implementing
@@ -295,8 +294,8 @@ class Counter(dict):
         """
         Returns the key with the highest value.
         """
-        if len(list(self.keys())) == 0: return None
-        all = list(self.items())
+        if len(self.keys()) == 0: return None
+        all = self.items()
         values = [x[1] for x in all]
         maxIndex = values.index(max(values))
         return all[maxIndex][0]
@@ -313,7 +312,7 @@ class Counter(dict):
         >>> a.sortedKeys()
         ['second', 'third', 'first']
         """
-        sortedItems = list(self.items())
+        sortedItems = self.items()
         compare = lambda x, y:  sign(y[1] - x[1])
         sortedItems.sort(cmp=compare)
         return [x[0] for x in sortedItems]
@@ -333,7 +332,7 @@ class Counter(dict):
         """
         total = float(self.totalCount())
         if total == 0: return
-        for key in list(self.keys()):
+        for key in self.keys():
             self[key] = self[key] / total
 
     def divideAll(self, divisor):
@@ -391,7 +390,7 @@ class Counter(dict):
         >>> a['first']
         1
         """
-        for key, value in list(y.items()):
+        for key, value in y.items():
             self[key] += value
 
     def __add__( self, y ):
@@ -463,7 +462,7 @@ def normalize(vectorOrCounter):
         counter = vectorOrCounter
         total = float(counter.totalCount())
         if total == 0: return counter
-        for key in list(counter.keys()):
+        for key in counter.keys():
             value = counter[key]
             normalizedCounter[key] = value / total
         return normalizedCounter
@@ -584,9 +583,9 @@ def lookup(name, namespace):
         module = __import__(moduleName)
         return getattr(module, objName)
     else:
-        modules = [obj for obj in list(namespace.values()) if str(type(obj)) == "<type 'module'>"]
+        modules = [obj for obj in namespace.values() if str(type(obj)) == "<type 'module'>"]
         options = [getattr(module, name) for module in modules if name in dir(module)]
-        options += [obj[1] for obj in list(namespace.items()) if obj[0] == name ]
+        options += [obj[1] for obj in namespace.items() if obj[0] == name ]
         if len(options) == 1: return options[0]
         if len(options) > 1: raise Exception('Name conflict for %s')
         raise Exception('%s not found as a method or class' % name)
@@ -595,8 +594,7 @@ def pause():
     """
     Pauses the output stream awaiting user feedback.
     """
-    print("<Press enter/return to continue>")
-    input()
+    input("<Press enter/return to continue>")
 
 
 # code to handle timeouts

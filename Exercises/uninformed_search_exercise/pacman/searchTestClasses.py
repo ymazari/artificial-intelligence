@@ -12,6 +12,7 @@
 # Pieter Abbeel (pabbeel@cs.berkeley.edu).
 
 
+import sys
 import re
 import testClasses
 import textwrap
@@ -61,15 +62,15 @@ class GraphSearch(SearchProblem):
         if r == None:
             print("Broken graph:")
             print('"""%s"""' % graph_text)
-            raise Exception("GraphSearch graph specification start_state not found or incorrect on line:" + l)
+            raise Exception("GraphSearch graph specification start_state not found or incorrect on line 0")
         self.start_state = r.group(1).strip()
         r = re.match('goal_states:(.*)', lines[1])
         if r == None:
             print("Broken graph:")
             print('"""%s"""' % graph_text)
-            raise Exception("GraphSearch graph specification goal_states not found or incorrect on line:" + l)
+            raise Exception("GraphSearch graph specification goal_states not found or incorrect on line 1")
         goals = r.group(1).split()
-        self.goals = list(map(str.strip, goals))
+        self.goals = [str.strip(g) for g in goals]
         self.successors = {}
         all_states = set()
         self.orderedSuccessorTuples = []
@@ -144,8 +145,8 @@ def parseHeuristic(heuristicText):
         tokens = line.split()
         if len(tokens) != 2:
             print("Broken heuristic:")
-            print('"""%s"""' % graph_text)
-            raise Exception("GraphSearch heuristic specification broken:" + l)
+            print('"""%s"""' % heuristicText)
+            raise Exception("GraphSearch heuristic specification broken at tokens:" + str(tokens))
         state, h = tokens
         heuristic[state] = float(h)
 
@@ -153,6 +154,7 @@ def parseHeuristic(heuristicText):
         if state in heuristic:
             return heuristic[state]
         else:
+            import pprint
             pp = pprint.PrettyPrinter(indent=4)
             print("Heuristic:")
             pp.pprint(heuristic)
@@ -289,7 +291,7 @@ class PacmanSearchTest(testClasses.TestCase):
             return None, None, 'The result of %s must be a list. (Instead, it is %s)' % (self.alg, type(solution))
 
         from game import Directions
-        dirs = list(Directions.LEFT.keys())
+        dirs = Directions.LEFT.keys()
         if [el in dirs for el in solution].count(False) != 0:
             return None, None, 'Output of %s must be a list of actions from game.Directions' % self.alg
 
@@ -770,7 +772,7 @@ class CornerHeuristicPacman(testClasses.TestCase):
         searchAgents = moduleDict['searchAgents']
         total = 0
         true_cost = float(solutionDict['cost'])
-        thresholds = list(map(int, solutionDict['thresholds'].split()))
+        thresholds = [int(x) for x in solutionDict['thresholds'].split()]
         game_state = pacman.GameState()
         lay = layout.Layout([l.strip() for l in self.layout_text.split('\n')])
         game_state.initialize(lay, 0)

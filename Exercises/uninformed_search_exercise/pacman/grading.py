@@ -45,7 +45,7 @@ class Grades:
     self.mute = muteOutput
     self.prereqs = defaultdict(set)
 
-    #print 'Autograder transcript for %s' % self.project
+    #print('Autograder transcript for %s' % self.project)
     print('Starting on %d-%d at %d:%02d:%02d' % self.start)
 
   def addPrereq(self, question, prereq):
@@ -61,13 +61,14 @@ class Grades:
     for q in self.questions:
       print('\nQuestion %s' % q)
       print('=' * (9 + len(q)))
-      print()
+      print
       self.currentQuestion = q
 
       incompleted = self.prereqs[q].difference(completedQuestions)
       if len(incompleted) > 0:
           prereq = incompleted.pop()
-          print("""*** NOTE: Make sure to complete Question %s before working on Question %s,
+          print(
+"""*** NOTE: Make sure to complete Question %s before working on Question %s,
 *** because Question %s builds upon your answer for Question %s.
 """ % (prereq, q, q, prereq))
           continue
@@ -96,7 +97,7 @@ class Grades:
     for q in self.questions:
       print('Question %s: %d/%d' % (q, self.points[q], self.maxes[q]))
     print('------------------')
-    print('Total: %d/%d\n' % (self.points.totalCount(), sum(self.maxes.values())))
+    print('Total: %d/%d' % (self.points.totalCount(), sum(self.maxes.values())))
     if bonusPic and self.points.totalCount() == 25:
       print("""
 
@@ -130,15 +131,15 @@ class Grades:
                     @@@@@@@@@@@@@@@@@@
 
 """)
-#     print("""
-# Your grades are NOT yet registered.  To register your grades, make sure
-# to follow your instructor's guidelines to receive credit on your project.
-# """)
+    print("""
+Your grades are NOT yet registered.  To register your grades, make sure
+to follow your instructor's guidelines to receive credit on your project.
+""")
 
-#     if self.edxOutput:
-#         self.produceOutput()
-#     if self.gsOutput:
-#         self.produceGradeScopeOutput()
+    if self.edxOutput:
+        self.produceOutput()
+    if self.gsOutput:
+        self.produceGradeScopeOutput()
 
   def addExceptionMessage(self, q, inst, traceback):
     """
@@ -255,8 +256,8 @@ class Grades:
         checkOrX = checkOrX,
         points = self.points[q]
       )
-      # print "*** output for Question %s " % q[1]
-      # print output
+      # print("*** output for Question %s " % q[1])
+      # print(output)
       edxOutput.write(output)
     edxOutput.write("</div>")
     edxOutput.close()
@@ -297,7 +298,7 @@ class Grades:
     print("WARNING**** addMessageToEmail is deprecated %s" % message)
     for line in message.split('\n'):
       pass
-      #print '%%% ' + line + ' %%%'
+      #print('%%% ' + line + ' %%%')
       #self.messages[self.currentQuestion].append(line)
 
 

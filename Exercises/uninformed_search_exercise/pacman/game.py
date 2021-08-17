@@ -59,7 +59,7 @@ class Directions:
                    WEST:  SOUTH,
                    STOP:  STOP}
 
-    RIGHT =      dict([(y,x) for x, y in list(LEFT.items())])
+    RIGHT =      dict([(y,x) for x, y in LEFT.items()])
 
     REVERSE = {NORTH: SOUTH,
                SOUTH: NORTH,
@@ -246,7 +246,7 @@ class Grid:
         return tuple(bits)
 
     def _cellIndexToPosition(self, index):
-        x = index / self.height
+        x = index // self.height
         y = index % self.height
         return x, y
 
@@ -295,7 +295,7 @@ class Actions:
                    Directions.WEST:  (-1, 0),
                    Directions.STOP:  (0, 0)}
 
-    _directionsAsList = list(_directions.items())
+    _directionsAsList = _directions.items()
 
     TOLERANCE = .001
 
@@ -670,7 +670,7 @@ class Game:
                             return
 
                     self.totalAgentTimes[agentIndex] += move_time
-                    #print "Agent: %d, time: %f, total: %f" % (agentIndex, move_time, self.totalAgentTimes[agentIndex])
+                    #print("Agent: %d, time: %f, total: %f" % (agentIndex, move_time, self.totalAgentTimes[agentIndex]))
                     if self.totalAgentTimes[agentIndex] > self.rules.getMaxTotalTime(agentIndex):
                         print("Agent %d ran out of time! (time: %1.2f)" % (agentIndex, self.totalAgentTimes[agentIndex]), file=sys.stderr)
                         self.agentTimeout = True
@@ -722,7 +722,7 @@ class Game:
                     agent.final( self.state )
                     self.unmute()
                 except Exception as data:
-                    if not self.catchExceptions: raise
+                    if not self.catchExceptions: raise data
                     self._agentCrash(agentIndex)
                     self.unmute()
                     return

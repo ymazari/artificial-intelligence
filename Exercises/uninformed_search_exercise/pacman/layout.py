@@ -67,11 +67,11 @@ class Layout:
         return self.walls[x][col]
 
     def getRandomLegalPosition(self):
-        x = random.choice(list(range(self.width)))
-        y = random.choice(list(range(self.height)))
+        x = random.choice(range(self.width))
+        y = random.choice(range(self.height))
         while self.isWall( (x, y) ):
-            x = random.choice(list(range(self.width)))
-            y = random.choice(list(range(self.height)))
+            x = random.choice(range(self.width))
+            y = random.choice(range(self.height))
         return (x,y)
 
     def getRandomCorner(self):
