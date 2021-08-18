@@ -535,7 +535,19 @@ class ClosestDotSearchAgent(SearchAgent):
         problem = AnyFoodSearchProblem(gameState)
 
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        food_list = food.asList()
+        if len(food_list) == 0:  # Goal state
+            return 0
+
+        min_distance = np.inf
+        closest_path = None
+        for food_spot in food_list:
+            path, distance = bfs_path(startPosition, food_spot, gameState)
+            if distance < min_distance:
+                min_distance = distance
+                closest_path = path
+
+        return closest_path
 
 class AnyFoodSearchProblem(PositionSearchProblem):
     """
@@ -583,10 +595,25 @@ def mazeDistance(point1, point2, gameState):
 
     This might be a useful helper function for your ApproximateSearchAgent.
     """
+    _, length = bfs_path(point1, point2, gameState)
+    return length
+
+
+def bfs_path(point1, point2, gameState):
+    """
+    Returns the maze distance between any two points, using the search functions
+    you have already built. The gameState can be any game state -- Pacman's
+    position in that state is ignored.
+
+    Example usage: mazeDistance( (2,4), (5,6), gameState)
+
+    This might be a useful helper function for your ApproximateSearchAgent.
+    """
     x1, y1 = point1
     x2, y2 = point2
     walls = gameState.getWalls()
     assert not walls[x1][y1], 'point1 is a wall: ' + str(point1)
     assert not walls[x2][y2], 'point2 is a wall: ' + str(point2)
     prob = PositionSearchProblem(gameState, start=point1, goal=point2, warn=False, visualize=False)
-    return len(search.bfs(prob))
+    path = search.bfs(prob)
+    return path, len(path)
