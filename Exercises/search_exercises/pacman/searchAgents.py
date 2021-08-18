@@ -34,13 +34,16 @@ description for details.
 Good luck and happy searching!
 """
 
-from game import Directions
-from game import Agent
-from game import Actions
-import util
 import time
+
+import numpy as np
+
 import search
-from copy import deepcopy
+import util
+from game import Actions
+from game import Agent
+from game import Directions
+
 
 class GoWestAgent(Agent):
     "An agent that goes West until it can't."
@@ -335,7 +338,7 @@ class CornersProblem(search.SearchProblem):
             if not hitsWall:
                 next_position = (nextx, nexty)
                 next_corners = set(state[1])
-                if self.__is_corner(next_position):
+                if self.is_corner(next_position):
                     next_corners.discard(next_position)
                 successor = ((next_position, tuple(next_corners)), action, 1)
                 successors.append(successor)
@@ -343,7 +346,7 @@ class CornersProblem(search.SearchProblem):
         self._expanded += 1 # DO NOT CHANGE
         return successors
 
-    def __is_corner(self, position):
+    def is_corner(self, position):
         return position in self.corners_set
 
     def getCostOfActions(self, actions):
@@ -377,7 +380,28 @@ def cornersHeuristic(state, problem):
     walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
 
     "*** YOUR CODE HERE ***"
-    return 0 # Default to trivial solution
+    """ 
+        The heuristic is the lower-bound Manhattan distance from the current state to the 
+        remaining unvisited closest corners. 
+    """
+    heuristic = 0
+    position = state[0]
+    unvisited_corners = set(state[1])
+    while unvisited_corners:
+        closest_corner = None
+        closest_corner_distance = np.inf
+        for corner in unvisited_corners:
+            distance = util.manhattanDistance(position, corner)
+            if distance < closest_corner_distance:
+                closest_corner_distance = distance
+                closest_corner = corner
+
+        heuristic += closest_corner_distance
+        unvisited_corners.remove(closest_corner)
+        position = closest_corner
+
+    return heuristic
+
 
 class AStarCornersAgent(SearchAgent):
     "A SearchAgent for FoodSearchProblem using A* and your foodHeuristic"

@@ -17,10 +17,11 @@ In search.py, you will implement generic search algorithms which are called by
 Pacman agents (in searchAgents.py).
 """
 
-import util
-import numpy as np
 from collections import defaultdict
-from pprint import pprint
+
+import numpy as np
+
+import util
 
 
 class SearchProblem:
@@ -98,13 +99,13 @@ def depthFirstSearch(problem):
     nodes_to_visit.push(initial_node)
 
     while not nodes_to_visit.isEmpty():
-        node_name, path = nodes_to_visit.pop()
-        if problem.isGoalState(node_name):
+        node, path = nodes_to_visit.pop()
+        if problem.isGoalState(node):
             return path
-        if node_name in visited:
+        if node in visited:
             continue
-        visited.add(node_name)
-        for neighbor in problem.getSuccessors(node_name):
+        visited.add(node)
+        for neighbor in problem.getSuccessors(node):
             neighbor_name = neighbor[0]
             neighbor_action = neighbor[1]
             if neighbor_name not in visited:
@@ -146,22 +147,17 @@ def uniformCostSearch(problem):
     distances[problem.getStartState()] = 0
 
     while not distances_pq.isEmpty():
-        current_node = distances_pq.pop()
-        current_node_name = current_node[0]
-        current_node_path = current_node[1]
-        if problem.isGoalState(current_node_name):
+        current_node, current_node_path = distances_pq.pop()
+        if problem.isGoalState(current_node):
             return current_node_path
-        if current_node_name in explored:
+        if current_node in explored:
             continue
-        explored.add(current_node_name)
-        for neighbor in problem.getSuccessors(current_node_name):
-            neighbor_name = neighbor[0]
-            neighbor_path = neighbor[1]
-            neighbor_weight = neighbor[2]
-            new_dist = distances[current_node_name] + neighbor_weight
-            if new_dist < distances[neighbor_name]:
-                distances[neighbor_name] = new_dist
-                distances_pq.update((neighbor_name, current_node_path + [neighbor_path]), new_dist)
+        explored.add(current_node)
+        for neighbor, neighbor_path, neighbor_weight in problem.getSuccessors(current_node):
+            new_dist = distances[current_node] + neighbor_weight
+            if new_dist < distances[neighbor]:
+                distances[neighbor] = new_dist
+                distances_pq.update((neighbor, current_node_path + [neighbor_path]), new_dist)
 
 def nullHeuristic(state, problem=None):
     """
@@ -184,23 +180,18 @@ def aStarSearch(problem, heuristic=nullHeuristic):
     graph_distances[problem.getStartState()] = 0
 
     while not distances_pq.isEmpty():
-        current_node = distances_pq.pop()
-        current_node_name = current_node[0]
-        current_node_path = current_node[1]
-        if problem.isGoalState(current_node_name):
+        current_node, current_node_path = distances_pq.pop()
+        if problem.isGoalState(current_node):
             return current_node_path
-        if current_node_name in explored:
+        if current_node in explored:
             continue
-        explored.add(current_node_name)
-        for neighbor in problem.getSuccessors(current_node_name):
-            neighbor_name = neighbor[0]
-            neighbor_path = neighbor[1]
-            neighbor_weight = neighbor[2]
-            new_dist = graph_distances[current_node_name] + neighbor_weight
-            if new_dist < graph_distances[neighbor_name]:
-                graph_distances[neighbor_name] = new_dist
-                heuristic_distance = new_dist + heuristic(neighbor_name, problem)
-                distances_pq.update((neighbor_name, current_node_path + [neighbor_path]), heuristic_distance)
+        explored.add(current_node)
+        for neighbor, neighbor_path, neighbor_weight in problem.getSuccessors(current_node):
+            new_dist = graph_distances[current_node] + neighbor_weight
+            if new_dist < graph_distances[neighbor]:
+                graph_distances[neighbor] = new_dist
+                heuristic_distance = new_dist + heuristic(neighbor, problem)
+                distances_pq.update((neighbor, current_node_path + [neighbor_path]), heuristic_distance)
 
 
 # Abbreviations
