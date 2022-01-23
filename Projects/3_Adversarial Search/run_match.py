@@ -105,7 +105,7 @@ def play_matches(custom_agent, test_agent, cli_args):
 
 def main(args):
     test_agent = TEST_AGENTS[args.opponent.upper()]
-    custom_agent = Agent(CustomPlayer, "Custom Agent")
+    custom_agent = TEST_AGENTS[args.agent.upper()]
     wins, num_games = play_matches(custom_agent, test_agent, args)
 
     logger.info("Your agent won {:.1f}% of matches against {}".format(
@@ -167,6 +167,13 @@ if __name__ == "__main__":
             for initial testing because they run more quickly than the minimax agent.
         """
     )
+
+    parser.add_argument(
+        '-a', '--agent', type=str, default='SELF', choices=list(TEST_AGENTS.keys()),
+        help="""\
+            Choose the agent for the player.
+        """
+    )
     parser.add_argument(
         '-p', '--processes', type=int, default=NUM_PROCS,
         help="""\
@@ -185,6 +192,7 @@ if __name__ == "__main__":
     logging.basicConfig(filename="matches.log", filemode="w", level=logging.DEBUG)
     logging.info(
         "Search Configuration:\n" +
+        "Player: {}\n".format(args.agent) +
         "Opponent: {}\n".format(args.opponent) +
         "Rounds: {}\n".format(args.rounds) +
         "Fair Matches: {}\n".format(args.fair_matches) +

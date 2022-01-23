@@ -193,4 +193,5 @@ def _request_action(agent, queue, game_state):
         queue.start_timer()
         agent.get_action(game_state)
     except StopSearch:
+        print("STOP SEARCH")
         pass
